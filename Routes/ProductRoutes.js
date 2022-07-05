@@ -1,7 +1,7 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import Product from './../Models/ProductModel.js';
-// import protect from './../Middleware/AuthMiddleware.js';
+import protect from './../Middleware/AuthMiddleware.js';
 
 const productRoute = express.Router();
 
@@ -44,8 +44,8 @@ productRoute.get(
 
 // PRODUCT REVIEW
 productRoute.post(
-  '/:id/review',
-  //   protect,
+  "/:id/review",
+  protect,
   asyncHandler(async (req, res) => {
     const { rating, comment } = req.body;
     const product = await Product.findById(req.params.id);
@@ -56,7 +56,7 @@ productRoute.post(
       );
       if (alreadyReviewed) {
         res.status(400);
-        throw new Error('Product already Reviewed');
+        throw new Error("Product already Reviewed");
       }
       const review = {
         name: req.user.name,
@@ -72,10 +72,10 @@ productRoute.post(
         product.reviews.length;
 
       await product.save();
-      res.status(201).json({ message: 'Reviewed Added' });
+      res.status(201).json({ message: "Reviewed Added" });
     } else {
       res.status(404);
-      throw new Error('Product not Found');
+      throw new Error("Product not Found");
     }
   })
 );
